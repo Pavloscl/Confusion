@@ -28,6 +28,7 @@
             "aot": true,
             "assets": [
               "src/favicon.ico",
+              //"node_modules/font-awesome/css/font-awesome.css" ,//-Esto lo copie de la web
               "src/assets"
             ],
             "styles": [
