@@ -9,7 +9,7 @@
         <h3>{{dish.name | uppercase}}</h3>
       </mat-card-title>
     </mat-card-header>
-    <img mat-card-image src={{dish.image}} alt={{dish.name}}>
+    <img mat-card-image src="{{baseURL + dish.image}}" alt={{dish.name}}>
     <mat-card-content>
       <p>
         {{dish.description}}
@@ -20,8 +20,6 @@
     <mat-spinner></mat-spinner><h4>Loading . . . Please Wait</h4>
   </div>
 
- 
-
   <mat-card *ngIf="promotion" fxFlex>
     <mat-card-header>
       <div mat-card-avatar></div>
@@ -29,7 +27,7 @@
         <h3>{{promotion.name | uppercase}}</h3>
       </mat-card-title>
     </mat-card-header>
-    <img mat-card-image src={{promotion.image}} alt={{promotion.name}}>
+    <img mat-card-image src="{{baseURL + promotion.image}}" alt={{promotion.name}}>
     <mat-card-content>
       <p>
         {{promotion.description}}
@@ -48,7 +46,7 @@
         <h3>{{leader.name | uppercase}} {{leader.abbr | uppercase}}</h3>
       </mat-card-title>
     </mat-card-header>
-    <img mat-card-image src={{leader.image}} alt={{leader.name}}>
+    <img mat-card-image src="{{baseURL + leader.image}}" alt={{leader.name}}>
     <mat-card-content>
       <p> {{leader.designation}}</p>
       <p>

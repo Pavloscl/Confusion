@@ -17,6 +17,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import {MatSliderModule} from '@angular/material/slider';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
 import 'hammerjs';
 import { AppComponent } from './app.component';
 import { MenuComponent } from './menu/menu.component';
@@ -33,6 +34,9 @@ import { DishService } from './services/dish.service';
 import { PromotionService } from './services/promotion.service';
 import { LeaderService } from './services/leader.service';
 import { LoginComponent } from './login/login.component';
+
+import { baseURL } from './shared/baseurl';
+
 
 
 @NgModule({
@@ -66,12 +70,19 @@ import { LoginComponent } from './login/login.component';
     MatProgressSpinnerModule,
     MatSliderModule,
     FormsModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    HttpClientModule
   ],
   entryComponents: [
     LoginComponent
 ],
-  providers: [DishService,PromotionService,LeaderService],
+  providers: [
+    DishService,
+    PromotionService,
+    LeaderService,
+    {provide: 'baseURL', useValue: baseURL}
+    ],
+
   bootstrap: [AppComponent]
 })
 export class AppModule { }
