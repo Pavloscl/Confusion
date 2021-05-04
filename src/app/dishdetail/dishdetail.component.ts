@@ -2,11 +2,13 @@ import { Component, OnInit,ViewChild,Inject } from '@angular/core';
 import { Params, ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { Dish } from '../shared/dish';
+import { Comment } from '../shared/comment';
 import { DishService } from '../services/dish.service';
 import { switchMap } from 'rxjs/operators';
 import { FormBuilder, FormGroup, MinLengthValidator, Validators } from '@angular/forms';
 import { Key } from 'selenium-webdriver';
 import { Feedback, ContactType } from '../shared/feedback';
+import { isNull, TYPED_NULL_EXPR } from '@angular/compiler/src/output/output_ast';
 
 
 @Component({
@@ -16,14 +18,17 @@ import { Feedback, ContactType } from '../shared/feedback';
 })
 export class DishdetailComponent implements OnInit {
   
-  dish!: Dish;
+  dish!: Dish | null;
   dishIds: string[]=[];
   prev: string="";
   next: string="";
   errMess: string = "";
   commentForm!: FormGroup;
+  comment: Comment = new Comment;
   feedback!: Feedback;
   contactType = ContactType;
+  dishcopy: Dish= new Dish() ;
+  
   @ViewChild('fform') commentFormDirective:any;
 
    //formErrors = {   //Segun documentacion del curso  --- error TS7053----- Solucion  : { [key: string]: any } 
@@ -70,7 +75,7 @@ export class DishdetailComponent implements OnInit {
         .subscribe(dishIds => this.dishIds = dishIds);
       this.route.params
         .pipe(switchMap((params: Params) => this.dishservice.getDish(params['id'])))
-        .subscribe(dish => { this.dish = dish; this.setPrevNext(dish.id); },
+        .subscribe(dish => { this.dish = dish;this.dishcopy= dish, this.setPrevNext(dish.id); },
          errmess => this.errMess = <any>errmess);
     }
 
@@ -109,8 +114,6 @@ export class DishdetailComponent implements OnInit {
       }
     }
 
-
-
     setPrevNext(dishId: string) {
       const index = this.dishIds.indexOf(dishId);
       this.prev = this.dishIds[(this.dishIds.length + index - 1) % this.dishIds.length];
@@ -121,8 +124,17 @@ export class DishdetailComponent implements OnInit {
       this.location.back();
     }
     onSubmit() {
-      this.feedback = this.commentForm.value;
-      console.log(this.feedback);
+      this.comment = this.commentForm.value;
+      this.comment.date=new Date().toISOString();
+      console.log(this.comment);
+      this.dishcopy.comments.push(this.comment);
+      this.dishservice.putDish(this.dishcopy)
+      .subscribe(dish => {
+        this.dish = dish; this.dishcopy = dish;
+      },
+      //errmess => { this.dish = null; this.dishcopy = null; this.errMess = <any>errmess; }); // Error ts 2322 tipo null
+      errmess => { this.dish= null;this.errMess = <any>errmess; });
+      this.commentFormDirective.resetForm();
       this.commentForm.reset({
         author: '',
         rating: '',
