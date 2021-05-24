@@ -4,18 +4,34 @@ import { Observable,of } from 'rxjs';
 import { map,catchError } from 'rxjs/operators';
 import { HttpClient,HttpHeaders } from '@angular/common/http';
 import { baseURL } from '../shared/baseurl';
+import { environment } from 'src/environments/environment';
 import { ProcessHTTPMsgService } from './process-httpmsg.service';
 
 @Injectable({
   providedIn: 'root'
 })
+
+
 export class DishService {
+  myAppUrl!: string;
+  myApiUrl!: string;
+  myurl= 'https://localhost:44313';
+  myapi='/api/dishes/';
+  httpOptions = {
+    headers: new HttpHeaders({
+      'Content-Type': 'application/json; charset=utf-8'
+    })
+  };
 
   constructor(private http: HttpClient,
-    private processHTTPMsgService: ProcessHTTPMsgService) { }
+    private processHTTPMsgService: ProcessHTTPMsgService) { 
+
+      this.myAppUrl = environment.appUrl;
+      this.myApiUrl = 'api/dishes/';
+    }
 
   getDishes(): Observable<Dish[]> {
-    return this.http.get<Dish[]>(baseURL + 'dishes')
+    return this.http.get<Dish[]>(baseURL +'dishes' )
     .pipe(catchError(this.processHTTPMsgService.handleError));
   }
 
